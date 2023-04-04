@@ -13,7 +13,8 @@
 # This file was created by: Chris Cozort
 # Sources: http://kidscancode.org/blog/2016/08/pygame_1-1_getting-started/
 '''
-add a clock, if extra make the clock close game if 0
+
+
 '''
 
 # import libs
@@ -23,6 +24,7 @@ import os
 # import settings 
 from settings import *
 from sprites import *
+import time
 # from pg.sprite import aSprite
 # set up assets folders
 
@@ -50,7 +52,7 @@ class Game:
         self.plat1 = Platform(WIDTH, 70, 0, HEIGHT-50, (150,150,150), "normal")
         self.plat2 = Platform(100, 15, 50, 450, WHITE ,"bouncey")
         self.plat3 = Platform(100, 15, 500, 200, WHITE ,"bouncey")
-        self.plat4 = Platform(100, 15, 250, 320, BLACK ,"bouncey")
+        self.plat4 = Platform(100, 15, 250, 320, WHITE ,"bouncey")
         self.all_sprites.add(self.plat1)
         self.platforms.add(self.plat1)
         self.platforms.add(self.plat2)
@@ -102,10 +104,10 @@ class Game:
     def draw(self):
         self.screen.fill(BLUE)
         self.all_sprites.draw(self.screen)
-        # is this a method or a function?
+        self.draw_text("SCORE?", 24, WHITE, WIDTH/2, HEIGHT/8)
         pg.display.flip()
     def draw_text(self, text, size, color, x, y):
-        font_name = pg.font.match_font('arial')
+        font_name = pg.font.match_font('TimesNewRoman')
         font = pg.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
@@ -114,6 +116,19 @@ class Game:
     def get_mouse_now(self):
         x,y = pg.mouse.get_pos()
         return (x,y)
+# def countdown(h, m, s):
+#     total_seconds = h * 3600 + m * 60 + s
+#     while total_seconds > 0:
+#         timer = datetime.timedelta(seconds = total_seconds)
+#         print(timer, end="/r")
+#         time.sleep(.5)
+#         total_seconds -= 1
+#     print("TIME")
+# # import for time things
+# h = input("enter the timer in hours:")
+# m = input("enter the timer in minutes:")
+# s = input("enter the timer in seconds:")
+# countdown(int(h), int(m),  int(s))
 
 # instantiate the game class...
 g = Game()
