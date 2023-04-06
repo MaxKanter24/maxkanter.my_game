@@ -31,6 +31,8 @@ import time
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, "img")
 
+
+
 # create game class in order to pass properties to the sprites file 
 class Game:
     def __init__(self):
@@ -86,6 +88,7 @@ class Game:
                     self.player.jump()
     def update(self):
         self.all_sprites.update()
+
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
@@ -101,10 +104,12 @@ class Game:
                 else:
                     self.player.pos.y = hits[0].rect.top
                     self.player.vel.y = 0
+            if pg.sprite.spritecollide(self.player, self.enemies, True):
+                    print("KILL")
     def draw(self):
         self.screen.fill(BLUE)
         self.all_sprites.draw(self.screen)
-        self.draw_text("SCORE?", 24, WHITE, WIDTH/2, HEIGHT/8)
+        self.draw_text("SCORE", 24, WHITE, WIDTH/2, HEIGHT/8)
         pg.display.flip()
     def draw_text(self, text, size, color, x, y):
         font_name = pg.font.match_font('TimesNewRoman')

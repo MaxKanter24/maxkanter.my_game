@@ -58,7 +58,7 @@ class Player(Sprite):
     #     if self.rect.y < 0:
     #         print("i am off the top of the screen...")
     def mob_collide(self):
-            hits = pg.sprite.spritecollide(self, self.game.enemies, True)
+            hits = pg.sprite.spritecollide(self, self.game.enemies, False)
                 
     def update(self):
         self.acc = vec(0, PLAYER_GRAV)  
@@ -67,7 +67,8 @@ class Player(Sprite):
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
         self.rect.center = self.pos
-
+        
+#trying to get two different classes of mobs, different mobs make different score
 class Mob(Sprite):
     def __init__(self,width,height, color):
         Sprite.__init__(self)
@@ -77,11 +78,12 @@ class Mob(Sprite):
         self.color = RED
         self.image.fill(self.color)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH/2, HEIGHT/2)
-        self.pos = vec(WIDTH/2, HEIGHT/2)
+        self.rect.center = (WIDTH/6, HEIGHT/4)
+        self.pos = vec(WIDTH/10, HEIGHT/6)
         self.vel = vec(randint(1,3),randint(1,3))
         self.acc = vec(1,1)
         self.cofric = 0.01
+
         
     # ...
     def inbounds(self):
