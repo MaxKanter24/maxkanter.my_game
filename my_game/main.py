@@ -1,6 +1,7 @@
 # file created by Max Kanter
 # absent 3/6
 # Code from Chris Cozort
+#w3 schools and other sites used
 
 # File created by: Chris Cozort
 # Agenda:
@@ -16,7 +17,6 @@
 
 
 '''
-
 # import libs
 import pygame as pg
 import random
@@ -42,6 +42,7 @@ class Game:
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption("my game")
         self.clock = pg.time.Clock()
+        self.score = 0
         self.running = True
         print(self.screen)
     def new(self):
@@ -51,7 +52,7 @@ class Game:
         self.platforms = pg.sprite.Group()
         self.enemies = pg.sprite.Group()
         self.player = Player(self)
-        self.plat1 = Platform(WIDTH, 70, 0, HEIGHT-50, (150,150,150), "normal")
+        self.plat1 = Platform(WIDTH, 70, 0, HEIGHT-50, (150,150,150), "icey")
         self.plat2 = Platform(100, 15, 50, 450, WHITE ,"bouncey")
         self.plat3 = Platform(100, 15, 500, 200, WHITE ,"bouncey")
         self.plat4 = Platform(100, 15, 250, 320, WHITE ,"bouncey")
@@ -64,11 +65,13 @@ class Game:
         self.all_sprites.add(self.plat3)
         self.all_sprites.add(self.plat4)
         self.all_sprites.add(self.player)
-        for i in range(0,10):
-            m = Mob(20,20,(0,255,0))
+        # the score willa add up t0 second number every time(50)
+        for i in range(0,9):
+            m = Mob(24,20,(0,255,0))
             self.all_sprites.add(m)
             self.enemies.add(m)
         self.run()
+
     def run(self):
         self.playing = True
         while self.playing:
@@ -76,6 +79,7 @@ class Game:
             self.events()
             self.update()
             self.draw()
+        
     
     def events(self):
         for event in pg.event.get():
@@ -88,32 +92,53 @@ class Game:
                     self.player.jump()
     def update(self):
         self.all_sprites.update()
-
         if self.player.vel.y > 0:
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                if hits[0].variant == "dissapearing":
-                    hits[0].kill()
-                elif hits[0].variant == "icey":
-                    self.player.pos.y = hits[0].rect.top
-                    self.player.vel.y = 0
-                    PLAYER_FRICTION = 0
-                elif hits[0].variant == "bouncey":
-                    self.player.pos.y = hits[0].rect.top
-                    self.player.vel.y = -PLAYER_JUMP
+                for platform in hits:
+                    self.player.standing = True
+                    if hits[0].variant == "normal":
+                        self.player.vel.y = 0
+                    elif hits[0].variant == "icey":
+                        self.player.pos.y = hits[0].rect.top
+                        self.player.vel.y = 0
+                        PLAYER_FRICTION = 0
+                    elif hits[0].variant == "bouncey":
+                        self.player.pos.y = platform.rect.top
+                        self.player.vel.y = -PLAYER_JUMP
+                    else:
+                        self.player.pos.y = platform.rect.top
+                        self.player.vel.y = 0
                 else:
-                    self.player.pos.y = hits[0].rect.top
-                    self.player.vel.y = 0
-            if pg.sprite.spritecollide(self.player, self.enemies, True):
-                    print("KILL")
+                    self.player.standing = False
+        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+        if hits:
+            self.playing = True
+        enemy_hits = pg.sprite.spritecollide(self.player, self.enemies, True)
+        #adds to number score related to the i in range
+        self.score += len(enemy_hits)
+        if self.score == 9:
+            playing = False
+         # True will remove the collided enemies from the group
+    # Increase score for each enemy hit
+       
+
     def draw(self):
         self.screen.fill(BLUE)
         self.all_sprites.draw(self.screen)
-        self.draw_text("SCORE", 24, WHITE, WIDTH/2, HEIGHT/8)
+        font = pg.font.Font(None, 36)
+        # displays score starting 0
+        score_text = font.render("Score: {}".format(self.score), True, WHITE)  
+        self.screen.blit(score_text, (10,10))
+        hits = pg.sprite.spritecollide(self.player, self.platforms, False)
+        if hits:
+            score_text =+ 1
         pg.display.flip()
+
+    # self.draw_text("SCORE", 24, WHITE, WIDTH/2, HEIGHT/8)
+       
     def draw_text(self, text, size, color, x, y):
-        font_name = pg.font.match_font('TimesNewRoman')
-        font = pg.font.Font(font_name, size)
+        font = pg.font.Font(size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x,y)
@@ -121,21 +146,7 @@ class Game:
     def get_mouse_now(self):
         x,y = pg.mouse.get_pos()
         return (x,y)
-# def countdown(h, m, s):
-#     total_seconds = h * 3600 + m * 60 + s
-#     while total_seconds > 0:
-#         timer = datetime.timedelta(seconds = total_seconds)
-#         print(timer, end="/r")
-#         time.sleep(.5)
-#         total_seconds -= 1
-#     print("TIME")
-# # import for time things
-# h = input("enter the timer in hours:")
-# m = input("enter the timer in minutes:")
-# s = input("enter the timer in seconds:")
-# countdown(int(h), int(m),  int(s))
 
-# instantiate the game class...
 g = Game()
 # kick off the game loop
 while g.running:

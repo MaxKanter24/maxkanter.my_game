@@ -10,7 +10,7 @@ vec = pg.math.Vector2
 from random import randint
 
 import time
-import datetime
+
 
 # player class
 
@@ -31,6 +31,8 @@ class Player(Sprite):
         self.acc = vec(0,0)
         self.cofric = 0.1
         self.canjump = False
+        self.standing = False
+    
     def input(self):
         keystate = pg.key.get_pressed()
         if keystate[pg.K_a]:
@@ -75,16 +77,26 @@ class Mob(Sprite):
         self.width = width
         self.height = height
         self.image = pg.Surface((self.width,self.height))
-        self.color = RED
+        self.color = GREEN
         self.image.fill(self.color)
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH/6, HEIGHT/4)
         self.pos = vec(WIDTH/10, HEIGHT/6)
         self.vel = vec(randint(1,3),randint(1,3))
-        self.acc = vec(1,1)
-        self.cofric = 0.01
+        self.acc = vec(1,1)    
+# class Mob(Sprite):
+#     def __innit__(self,width,height, color):
+#         self.width = width
+#         self.height = height
+#         self.image = pg.Surface((self.width,self.height))
+#         self.color = RED
+#         self.image.fill(self.color)
+#         self.rect = self.image.get_rect()
+#         self.rect.center = (WIDTH/1, HEIGHT/3)
+#         self.pos = vec(WIDTH/5, HEIGHT/5)
+#         self.vel = vec(randint(1,4),randint(2,2))
+#         self.acc = vec(1,2)
 
-        
     # ...
     def inbounds(self):
         if self.rect.x > WIDTH:
@@ -120,3 +132,4 @@ class Platform(Sprite):
         self.rect.x = x
         self.rect.y = y
         self.variant = variant
+       
